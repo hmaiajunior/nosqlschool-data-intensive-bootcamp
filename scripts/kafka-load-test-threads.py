@@ -14,13 +14,13 @@ import json
 
 # Configurações de conexão com a Confluent Cloud
 producer_config = {
-    'bootstrap.servers': 'pkc-p11xm.us-east-1.aws.confluent.cloud:9092', 
+    'bootstrap.servers': 'localhost:9091,localhost:9092,localhost:9093', 
 #    'sasl.username': 'N5UA7PWEBFGHGKFJ',
 #    'sasl.password': 'YvfeK8x4CKs3Nm8CyTHdG/tAJyATaAFSLifFD0vOewkL27NS4kxWnqEB39DUUjAH',
-    'sasl.username': '4KEE6J25VHWFIT6M',
-    'sasl.password': 'XYYP1QXSZmlwuDVzYDKPu2QnvP5AcC5jCQqn6v8kJw0k5GePLh2oZYId27JB4n8B',
-    'security.protocol': 'SASL_SSL',
-    'sasl.mechanisms': 'PLAIN'
+#    'sasl.username': '4KEE6J25VHWFIT6M',
+#    'sasl.password': 'XYYP1QXSZmlwuDVzYDKPu2QnvP5AcC5jCQqn6v8kJw0k5GePLh2oZYId27JB4n8B',
+#    'security.protocol': 'SASL_SSL',
+#    'sasl.mechanisms': 'PLAIN'
 }
 
 
@@ -30,11 +30,11 @@ KAFKA_TOPIC = 'topic_bootcamp_nosql'
 #KAFKA_TOPIC = 'topic_bc_0'
 
 # Define o número de mensagens que cada thread irá produzir (teste de carga)
-MESSAGES_PER_THREAD = 200000
+MESSAGES_PER_THREAD = 1000000
 
 # Define a quantidade de threads simultâneas
 #NUM_THREADS = 5
-NUM_THREADS = 10
+NUM_THREADS = 2
 
 def delivery_report(err, msg):
     """
