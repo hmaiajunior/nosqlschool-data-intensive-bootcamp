@@ -25,7 +25,7 @@ producer_config = {
 
 
 # Nome do tópico a ser utilizado
-KAFKA_TOPIC = 'topic_bootcamp_22'
+KAFKA_TOPIC = 'topic_bootcamp_nosql'
 #KAFKA_TOPIC = 'topic_bc_new_2'
 #KAFKA_TOPIC = 'topic_bc_0'
 
