@@ -166,81 +166,46 @@ services:
       driver: "json-file"
       options:
         max-size: "1m"
-  
-  # kafka-shell:
-  #   image: confluentinc/cp-kafka:${CONFLUENT_PLATFORM_VERSION:-7.4.0}
-  #   container_name: kafka-shell
-  #   restart: unless-stopped
-  #   depends_on:
-  #     - zookeeper
-  #     - broker-1
-  #     - broker-2
-  #     - broker-3
-  #   entrypoint: ""
-  #   command: "sleep 10000000"
-  #   networks:
-  #     - kafka
 
-  # producer:
-  #   platform: linux/amd64
-  #   container_name: producer
-  #   build: ./kafka-producer/
-  #   restart: always
-  #   environment:
-  #     - ACTION=producer
-  #     - BOOTSTRAP_SERVERS=broker-1:29091,broker-2:29092,broker-3:29093
-  #     - TOPIC=freezer-temperatura
-  #     - PYTHONUNBUFFERED=1 # https://github.com/docker/compose/issues/4837#issuecomment-302765592
-  #   networks:
-  #     - kafka
-  #   depends_on:
-  #     - zookeeper
-  #     - broker-1
-  #     - broker-2
-  #     - broker-3
-  #   logging:
-  #     driver: "json-file"
-  #     options:
-  #       max-size: "1m"
+  kafka-exporter:
+    image: danielqsj/kafka-exporter:latest
+    container_name: kafka-exporter
+    restart: unless-stopped
+    ports:
+      - "9308:9308"
+    depends_on:
+      - broker-1
+      - broker-2
+      - broker-3
+    command: --kafka.server=broker-1:29091 --kafka.server=broker-2:29092 --kafka.server=broker-3:29093
+    environment:
+      KAFKA_BROKERS: "broker-1:29091,broker-2:29092,broker-3:29093"
+    networks:
+      - kafka
 
-  # consumer:
-  #   platform: linux/amd64
-  #   container_name: consumer
-  #   build: ./python-client/
-  #   restart: always
-  #   environment:
-  #     - ACTION=consumer
-  #     - BOOTSTRAP_SERVERS=broker-1:29091,broker-2:29092,broker-3:29093
-  #     - TOPIC=my-topic
-  #     - CONSUMER_GROUP=cg-group-id
-  #     - PYTHONUNBUFFERED=1 # https://github.com/docker/compose/issues/4837#issuecomment-302765592
-  #   networks:
-  #     - kafka
-  #   depends_on:
-  #     - zookeeper
-  #     - broker-1
-  #     - broker-2
-  #     - broker-3
-  #     - producer
-  #   logging:
-  #     driver: "json-file"
-  #     options:
-  #       max-size: "1m"
-
-  # shell:
-  #   container_name: shell
-  #   build: ./python-client/
-  #   restart: always
-  #   environment:
-  #     - ACTION=shell
-  #     - BOOTSTRAP_SERVERS=broker-1:29091,broker-2:29092,broker-3:29093
-  #     - TOPIC=my-topic
-  #   networks:
-  #     - kafka
-  #   logging:
-  #     driver: "json-file"
-  #     options:
-  #       max-size: "1m"
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - kafka
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    networks:
+      - kafka
+    volumes:
+      - grafana_data:/var/lib/grafana
+volumes:
+  grafana_data:
+    driver: local
 
 networks:
   kafka:

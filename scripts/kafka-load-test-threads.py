@@ -14,7 +14,9 @@ import json
 
 # Configurações de conexão com a Confluent Cloud
 producer_config = {
-    'bootstrap.servers': 'localhost:9091,localhost:9092,localhost:9093', 
+    'bootstrap.servers': 'localhost:9091,localhost:9092,localhost:9093',
+    'linger.ms': 5,
+    'acks': '0',
 #    'sasl.username': 'N5UA7PWEBFGHGKFJ',
 #    'sasl.password': 'YvfeK8x4CKs3Nm8CyTHdG/tAJyATaAFSLifFD0vOewkL27NS4kxWnqEB39DUUjAH',
 #    'sasl.username': '4KEE6J25VHWFIT6M',
@@ -34,7 +36,7 @@ MESSAGES_PER_THREAD = 1000000
 
 # Define a quantidade de threads simultâneas
 #NUM_THREADS = 5
-NUM_THREADS = 2
+NUM_THREADS = 3
 
 def delivery_report(err, msg):
     """
